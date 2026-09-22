@@ -1,0 +1,1 @@
+console.log("Hello, Codebox! First bootcamp, yay!");
