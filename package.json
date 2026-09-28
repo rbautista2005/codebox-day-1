@@ -1,10 +1,13 @@
 {
   "name": "codebox-day-1",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Day 1 Codebox Express server",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "token": "node scripts/generate-token.js"
   },
   "repository": {
     "type": "git",
@@ -17,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/rbautista2005/codebox-day-1/issues"
   },
-  "homepage": "https://github.com/rbautista2005/codebox-day-1#readme"
+  "homepage": "https://github.com/rbautista2005/codebox-day-1#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
+  }
 }
