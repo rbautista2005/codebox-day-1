@@ -19,12 +19,12 @@ if (!process.env.JWT_SECRET) {
 const express = require("express");
 const usersRouter = require("./routes/users");
 const meRouter = require("./routes/me");
+const { notFound, errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware: parse JSON request bodies. Not used by the GET routes yet, but
-// this is where middleware belongs as the app grows.
+// Middleware: parse JSON request bodies into req.body (used by POST and PUT).
 app.use(express.json());
 
 // Route: handle GET requests to "/".
@@ -32,11 +32,15 @@ app.get("/", (req, res) => {
   res.send("Hello from Codebox!");
 });
 
-// Public routes.
+// Reads are public; writes require a token (see routes/users.js).
 app.use("/api/users", usersRouter);
 
 // Protected routes.
 app.use("/api/me", meRouter);
+
+// These must come after every route: they only run when nothing above answered.
+app.use(notFound);
+app.use(errorHandler);
 
 // Start the server and listen for incoming requests.
 app.listen(PORT, () => {

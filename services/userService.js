@@ -1,19 +1,61 @@
-// Temporary in-memory store. This is the only place that knows how users are
-// held, so swapping in a real database later means changing just this file.
-const users = [
-  { id: 1, name: "Alex" },
-  { id: 2, name: "Sam" },
-];
+const supabase = require("../config/supabase");
 
-// Return every user.
-function getAllUsers() {
-  return users;
+// This is the only place that knows users live in Supabase. Routes call these
+// functions and never talk to the database directly.
+
+const TABLE = "users";
+const COLUMNS = "id, name";
+
+// Supabase returns { data, error } instead of throwing. Turn errors into
+// throws so Express's error handler turns them into a 500 JSON response.
+function unwrap({ data, error }) {
+  if (error) throw error;
+  return data;
 }
 
-// Find one user by id. Returns undefined when nothing matches, and the caller
+// Return every user, oldest first.
+async function getAllUsers() {
+  return unwrap(await supabase.from(TABLE).select(COLUMNS).order("id"));
+}
+
+// Find one user by id. Returns null when nothing matches, and the caller
 // decides what that means in HTTP terms.
-function getUserById(id) {
-  return users.find((u) => u.id === Number(id));
+async function getUserById(id) {
+  return unwrap(
+    await supabase.from(TABLE).select(COLUMNS).eq("id", id).maybeSingle()
+  );
 }
 
-module.exports = { getAllUsers, getUserById };
+// Insert a user and return the stored row, including its new id.
+async function createUser({ name }) {
+  return unwrap(
+    await supabase.from(TABLE).insert({ name }).select(COLUMNS).single()
+  );
+}
+
+// Update a user's name. Returns the updated row, or null if the id is unknown.
+async function updateUser(id, { name }) {
+  return unwrap(
+    await supabase
+      .from(TABLE)
+      .update({ name })
+      .eq("id", id)
+      .select(COLUMNS)
+      .maybeSingle()
+  );
+}
+
+// Delete a user. Returns the deleted row, or null if the id is unknown.
+async function deleteUser(id) {
+  return unwrap(
+    await supabase.from(TABLE).delete().eq("id", id).select(COLUMNS).maybeSingle()
+  );
+}
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+};
