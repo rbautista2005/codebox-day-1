@@ -52,9 +52,19 @@ The day 1–2 routes (`/api/users`, `/api/me`) are unchanged.
 
 ## Deploy to Vercel
 
-1. Push to GitHub and import the repo in Vercel (root directory = repo root; `vercel.json` covers build, output, and routing).
+`vercel.json` deploys the repo as one Vercel project with two [services](https://vercel.com/docs/services) on one domain:
+
+| Service | Root | What it is | Public path |
+| --- | --- | --- | --- |
+| `api` | `.` | Express app (`app.js`) | `/api/*` (receives the full path, e.g. `/api/todos`) |
+| `client` | `client/` | Vite build of the React app | everything else |
+
+The browser calls `/api/...` on the same domain, so no CORS and no service bindings are needed.
+`server.js` is only for local runs.
+
+1. Push to GitHub and import the repo in Vercel (root directory = repo root).
 2. Add the env vars: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `JWT_SECRET`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`.
    The `VITE_` ones are baked into the client at build time, so set them before the first deploy (or redeploy after changing them).
 3. Deploy, then add the Vercel URL to Supabase's **Site URL / Redirect URLs**.
 
-`api/index.js` exposes the same Express app (`app.js`) as a Vercel function; `server.js` is only for local runs.
+To run the production routing locally: `npm run dev:vercel` (`vercel dev -L`, no Vercel login needed).

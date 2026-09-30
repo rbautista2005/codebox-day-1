@@ -1,5 +1,5 @@
 // Builds the Express app without starting it. server.js listens locally;
-// api/index.js hands the same app to Vercel as a serverless function.
+// On Vercel, the "api" service in vercel.json uses this file as its entrypoint.
 
 // Load .env into process.env if one exists. Node has this built in, so there
 // is no dotenv dependency to install.
