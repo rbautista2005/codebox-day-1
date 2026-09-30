@@ -1,13 +1,16 @@
 {
   "name": "codebox-day-1",
   "version": "1.0.0",
-  "description": "Day 1 Codebox Express server",
+  "description": "Tally: a to-do app with a React client and an Express + Supabase API",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "token": "node scripts/generate-token.js"
+    "dev:client": "npm --prefix client run dev",
+    "dev:all": "concurrently -n api,web -c yellow,cyan \"npm run dev\" \"npm run dev:client\"",
+    "build": "npm --prefix client install && npm --prefix client run build",
+    "token": "node scripts/generate-token.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -25,5 +28,8 @@
     "@supabase/supabase-js": "^2.117.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
   }
 }

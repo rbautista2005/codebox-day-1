@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Tally palette: ink-blue night, marigold for "done", coral for "remove". */
+@theme {
+  --color-ink: #0f1b33;
+  --color-surface: #172646;
+  --color-surface-raised: #1d2f55;
+  --color-line: #2a3a5e;
+  --color-ink-text: #e8ecf5;
+  --color-muted: #94a0ba;
+  --color-marigold: #f4b942;
+  --color-coral: #f07167;
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-ink text-ink-text font-sans antialiased;
+    min-height: 100dvh;
+  }
+  ::selection {
+    @apply bg-marigold text-ink;
+  }
+}
